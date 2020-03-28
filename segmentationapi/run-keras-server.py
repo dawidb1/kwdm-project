@@ -10,6 +10,7 @@
 from keras.preprocessing.image import img_to_array
 from keras.applications import ResNet50
 from keras.applications import imagenet_utils
+from keras.models import model_from_json
 from PIL import Image
 import numpy as np
 import flask
@@ -27,7 +28,15 @@ def load_model():
     has been pretrained on Imagenet
     '''
     global model
-    model = ResNet50(weights='imagenet')
+    # model = ResNet50(weights='imagenet')
+    json_file = open('model.json', 'r')
+    loaded_model_json = json_file.read()
+    json_file.close()
+    model = model_from_json(loaded_model_json)
+    # load weights into new model
+    model.load_weights("model.h5")
+    print("Loaded model from disk")
+
     global graph
     graph = tf.get_default_graph()
 
