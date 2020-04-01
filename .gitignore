@@ -1,3 +1,4 @@
 segmentationapi/.vscode/
 segmentationapi/model.json
 segmentationapi/model.h5
+segmentationapi/network/.vscode/
