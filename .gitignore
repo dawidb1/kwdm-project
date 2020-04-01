@@ -2,3 +2,6 @@ segmentationapi/.vscode/
 segmentationapi/model.json
 segmentationapi/model.h5
 segmentationapi/network/.vscode/
+segmentationapi/network/outputs/*.vtk
+segmentationapi/network/models/*.h5
+segmentationapi/network/__pycache__/
