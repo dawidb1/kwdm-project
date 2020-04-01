@@ -19,17 +19,21 @@ Y_train = []
 data_types = ['flair']
 for i in data_types:
     for study_dir in os.scandir(data_path):
-        print(os.path.join(study_dir.path, study_dir.name + '_' + i + '.nii.gz'));
-        img_path = os.path.join(study_dir.path, study_dir.name + '_' + i + '.nii.gz')
-        img = nib.load(img_path).get_data()
-        X_train.append(img)
+        if len(X_train) < 6:
+            print(os.path.join(study_dir.path, study_dir.name + '_' + i + '.nii.gz'));
+            img_path = os.path.join(study_dir.path, study_dir.name + '_' + i + '.nii.gz')
+            img = nib.load(img_path).get_data()
+            X_train.append(img)
         
 for study_dir in os.scandir(data_path):
-        print(os.path.join(study_dir.path, study_dir.name + '_seg.nii.gz'));
-        img_path = os.path.join(study_dir.path, study_dir.name + '_seg.nii.gz')
-        img = nib.load(img_path).get_data()
-        Y_train.append(img)
+       if len(Y_train) < 6:
+            print(os.path.join(study_dir.path, study_dir.name + '_seg.nii.gz'));
+            img_path = os.path.join(study_dir.path, study_dir.name + '_seg.nii.gz')
+            img = nib.load(img_path).get_data()
+            Y_train.append(img)
         
+X_train = X_train[0:5]
+Y_train = Y_train[0:5]
         
 # img = nib.load(img)
 # hdr = img.header
