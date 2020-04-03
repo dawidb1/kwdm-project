@@ -5,3 +5,4 @@ segmentationapi/network/.vscode/
 segmentationapi/network/outputs/*.vtk
 segmentationapi/network/models/*.h5
 segmentationapi/network/__pycache__/
+segmentationapi/network/predictions/

@@ -6,9 +6,7 @@ Created on Sat Mar 28 18:33:57 2020
 """
 
 # Sample run
-# 'python convertNiftiToVtk
-# C:\dane\BRATS-2019-data\MICCAI_BraTS_2019_Data_Training\HGG\BraTS19_2013_5_1\BraTS19_2013_5_1_t1.nii.gz
-# output.vtk'
+# 'python convertNiftiToVtk.py C:\dane\BRATS-2019-data\training\HGG\BraTS19_2013_4_1\BraTS19_2013_4_1_seg.nii.gz output.vtk'
 
 import sys
 import os
