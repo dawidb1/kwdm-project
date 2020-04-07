@@ -6,3 +6,6 @@ segmentationapi/network/outputs/*.vtk
 segmentationapi/network/models/*.h5
 segmentationapi/network/__pycache__/
 segmentationapi/network/predictions/
+segmentationapi/dicom/.vscode/
+segmentationapi/dicom/__pycache__/
+*.dcm
