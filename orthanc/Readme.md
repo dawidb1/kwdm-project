@@ -8,8 +8,9 @@ Open this folder in CMD
 
 Run `Orhanc.exe config.json`
 
-
-
-Run PACS from .bat? @Damian pls add info
-
-what's next?
+Download http://nginx.org/en/download.html , version for windows 	nginx/Windows-1.17.10  
+Unpack it
+Replace nginx.conf in folder /conf
+Open cmd in nginx folder, type start nginx
+Open browser and go to localhost, if there is text: 'Welcome to nginx!' everything is working fine
+http://localhost/orthanc is the address of our orthanc server
