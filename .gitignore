@@ -9,3 +9,6 @@ segmentationapi/network/predictions/
 segmentationapi/dicom/.vscode/
 segmentationapi/dicom/__pycache__/
 *.dcm
+.idea
+.vscode
+__pycache__
