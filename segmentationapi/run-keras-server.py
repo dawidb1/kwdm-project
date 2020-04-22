@@ -16,10 +16,27 @@ import numpy as np
 import flask
 import io
 import tensorflow as tf
+import requests
 
 # initialise Flask application and Keras model
 app = flask.Flask(__name__)
 model = None
+
+
+def get_image(id):
+
+    # api-endpoint
+    URL = f"http://localhost:8043/instances/{id}/file"
+
+    # location given here
+    location = "delhi technological university"
+
+    # defining a params dict for the parameters to be sent to the API
+    # PARAMS = {'address': location}
+
+    # sending get request and saving the response as response object
+    r = requests.get(url=URL)
+    print(r)
 
 
 def load_model():
@@ -92,6 +109,9 @@ def predict():
 if __name__ == "__main__":
     print(('* loading Keras model and Flask starting server'))
     load_model()
-    app.run(host='0.0.0.0')
+    # app.run(host='0.0.0.0')
 
-    # app.run() - use when working locally
+    id = "4501f9f4-3b26b842-6be5a946-79d13ad5-63b59de9"
+    get_image(id)
+
+    app.run()  # - use when working locally
