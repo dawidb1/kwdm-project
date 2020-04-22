@@ -2,15 +2,14 @@ version: "2"
 services:
   nginx:
     build: nginx
-    #entrypoint: ["ls",  "-a" , "/etc/nginx/tls"]
     depends_on: [orthanc]
     restart: unless-stopped
     ports: ["80:80"]
-    volumes: ["nginx-tls:/etc/nginx/tls:Z"]
+    volumes: ["nginx:/etc/nginx:Z"]
   orthanc:
     build: orthanc
     restart: unless-stopped
-    volumes: ["orthanc-tls:/etc/orthanc/tls:Z"]
+    volumes: ["orthanc:/etc/orthanc:Z"]
 volumes:
-  orthanc-tls:
-  nginx-tls:
+  orthanc:
+  nginx:
