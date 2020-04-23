@@ -36,6 +36,8 @@ const actions = {
     async getImage({ commit }, instanceID) {
         const result = await helloService.getImage(instanceID);
         commit('setImage', result);
+        return result
+        
     },
 };
 
