@@ -48,8 +48,7 @@ export default {
       "getPatients",
       "getPatientStudies",
       "getPatientSeries",
-      "getPatientInstances",
-      "getImage"
+      "getPatientInstances"
     ]),
     getStudies(patientID) {
       this.getPatientStudies(patientID);
@@ -80,8 +79,7 @@ export default {
       "patients",
       "studies",
       "series",
-      "instances",
-      "image"
+      "instances"
     ])
   }
 };
