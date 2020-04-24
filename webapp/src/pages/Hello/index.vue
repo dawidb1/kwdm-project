@@ -28,7 +28,7 @@
         @click="showImage(item)"
       >Obraz: {{item}}</v-btn>
     </p>
-    <img :src="image" />
+    <img :src="imageData" />
   </div>
 </template>
 
@@ -48,8 +48,7 @@ export default {
       "getPatients",
       "getPatientStudies",
       "getPatientSeries",
-      "getPatientInstances",
-      "getImage"
+      "getPatientInstances"
     ]),
     getStudies(patientID) {
       this.getPatientStudies(patientID);
@@ -61,7 +60,15 @@ export default {
       this.getPatientInstances(seriesID);
     },
     showImage(instanceID) {
-      this.getImage(instanceID);
+      var that = this;
+      fetch(`http://localhost/orthanc/instances/${instanceID}/preview`)
+        .then(function(data) {
+          return data.blob();
+        })
+        .then(function(img) {
+          var dd = URL.createObjectURL(img);
+          that.imageData = dd;
+        });
     }
   },
   created() {
@@ -72,8 +79,7 @@ export default {
       "patients",
       "studies",
       "series",
-      "instances",
-      "image"
+      "instances"
     ])
   }
 };

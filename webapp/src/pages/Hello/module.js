@@ -4,16 +4,14 @@ const state = {
     patients: [],
     series: [],
     studies: [],
-    instances: [],
-    image: {}
+    instances: []
 };
 
 const getters = {
     patients: state => state.patients,
     series: state => state.series,
     studies: state => state.studies,
-    instances: state => state.instances,
-    image: state => state.image
+    instances: state => state.instances
 };
 
 const actions = {
@@ -33,10 +31,6 @@ const actions = {
         const result = await helloService.getPatientInstances(seriesID);
         commit('setInstances', result);
     },
-    async getImage({ commit }, instanceID) {
-        const result = await helloService.getImage(instanceID);
-        commit('setImage', result);
-    },
 };
 
 const mutations = {
@@ -55,9 +49,6 @@ const mutations = {
     setInstances(state, result) {
         state.instances = result;
     },
-    setImage(state, result) {
-        state.image = result;
-    }
 };
 
 const module = {
