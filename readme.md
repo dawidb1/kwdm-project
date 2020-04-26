@@ -12,3 +12,8 @@ Celem projektu jest stworzenie aplikacji webowej, która umożliwi wsparcie dla 
 - orthanc (API do obrazów z pacsa)
 - webapi (.NET - logowanie/rejestracja)
 - segmentationapi (python - segmentacja)
+
+# Docker
+## only orthanc 
+docker build -t orthanc-only:latest .
+docker run -p 8042:8042 orthanc-only
