@@ -10,22 +10,21 @@ services:
     build: server/orthanc
     restart: unless-stopped
     volumes: ["orthanc:/etc/orthanc:Z"]
-  webapp:
-    build: ./webapp
+  angular:
+    build: ./angular
     restart: always
     depends_on:
       - orthanc
       - nginx
     ports:
-      - "8080:8080"
+      - "4200:4200"
     volumes:
-      - ./webapp/src:/usr/webapp/src
-      - ./webapp/public:/usr/webapp/public
+      - ./angular:/usr/angular
     environment:
-      PORT: 8080
+      PORT: 4200
       CHOKIDAR_USEPOLLING: 1
       CHOKIDAR_POLLINTERVAL: 3000
 volumes:
   orthanc:
   nginx:
-  webapp:
+  angular:
