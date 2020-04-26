@@ -1,0 +1,48 @@
+version: "3"
+services:
+  orthanc:
+    image: osimis/orthanc:20.2.0
+    container_name: orthanc
+    # depends_on:
+    # - postgres
+    restart: always
+    networks:
+      - frontend
+      - backend
+    volumes:
+      # configuration file
+      - ${ORTHANC_CONFIG}:/etc/orthanc/orthanc.json:ro
+      # storage volume for raw dicoms
+      - ${ORTHANC_DB_MNT}:/var/lib/orthanc/db
+    environment:
+      # DICOMWeb Plugin
+      - DW_ENABLED=true
+      # Postgres Plugin
+      # - PG_ENABLED=true
+    command: /etc/orthanc/orthanc.json
+
+  webapp:
+    build: ./webapp
+    restart: always
+    networks:
+      - frontend
+      - backend
+    depends_on:
+      - orthanc
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./webapp/src:/usr/webapp/src
+      - ./webapp/public:/usr/webapp/public
+      # Nginx as a reversed proxy for orthanc and the viewer
+      - ${NGINX_DEFAULT_CONF}:/etc/nginx/conf.d/default.conf:ro
+      # OHIF Viewer configuration to reach DICOMWeb endpoints
+      # - ${VIEWER_CONFIG}:/usr/share/nginx/html/app-config.js:ro
+    environment:
+      PORT: 8080
+      CHOKIDAR_USEPOLLING: 1
+      CHOKIDAR_POLLINTERVAL: 3000
+
+networks:
+  frontend:
+  backend:

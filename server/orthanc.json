@@ -1,0 +1,8 @@
+{
+  "Name": "Orthanc",
+  "RemoteAccessAllowed": true,
+  "RegisteredUsers": {
+    "demo": "demo"
+  },
+  "AuthenticationEnabled": true // In case there is a problem with authentication in webapp
+}
