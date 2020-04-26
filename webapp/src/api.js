@@ -1,11 +1,7 @@
-import axios from "axios";
+import axios from 'axios';
 
 const api = axios.create({
-  baseURL: "http://localhost/pacs",
-  auth: {
-    username: "demo",
-    password: "demo",
-  },
+  baseURL: 'http://localhost/orthanc/',
 });
 
 const client = {
@@ -27,8 +23,9 @@ const client = {
     const config = {
       params,
     };
-    const result = await api.delete(resource, config);
-    return result;
+      const result = await api.delete(resource, config);
+      return result;
+   
   },
 };
 
