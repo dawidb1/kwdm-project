@@ -1,6 +1,6 @@
 {
-    "/api": {
-        "target": "https://dog.ceo",
+    "/orthanc": {
+        "target": "http://localhost",
         "secure": false,
         "changeOrigin": true,
         "logLevel": "debug"

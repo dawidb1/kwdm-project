@@ -12,15 +12,18 @@ export class AppComponent {
 
   constructor(private http: HttpClient) {
     this.getPatientsProxy().subscribe();
-    this.getPatientsDirectly().subscribe();
   }
 
   getPatientsProxy(): Observable<any> {
+    return this.http.get('/orthanc/patients');
+  }
+
+  getDogsProxy(): Observable<any> {
 
     return this.http.get('/api/breeds/image/random');
   }
 
-  getPatientsDirectly(): Observable<any> {
+  getDogsDirectly(): Observable<any> {
     return this.http.get('https://dog.ceo/api/breeds/image/random');
   }
 }
