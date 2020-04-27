@@ -25,10 +25,19 @@
       <v-btn
         v-for="item in instances.Instances"
         :key="item"
-        @click="showImage(item)"
+        @click="getFramesForInstance(item)"
       >Obraz: {{item}}</v-btn>
     </p>
     <img :src="imageData" />
+    <label v-if="selectedFrame !== null">Wybrany przekrój: {{selectedFrame}}</label>
+    <v-slider
+      v-if="selectedFrame !== null"
+      v-model="selectedFrame"
+      class="align-center"
+      :max="frames.length-1"
+      :min="0"
+      hide-details
+    ></v-slider>
   </div>
 </template>
 
@@ -39,8 +48,17 @@ export default {
   name: "HelloWorld",
   data() {
     return {
-      imageData: ""
+      imageData: "",
+      selectedFrame: null,
+      selectedInstanceId: null
     };
+  },
+  watch: {
+    selectedFrame() {
+      if (this.selectedInstanceId !== null) {
+        this.showImage(this.selectedInstanceId);
+      }
+    }
   },
   methods: {
     ...mapActions("hello", [
@@ -48,7 +66,8 @@ export default {
       "getPatients",
       "getPatientStudies",
       "getPatientSeries",
-      "getPatientInstances"
+      "getPatientInstances",
+      "getFrames"
     ]),
     getStudies(patientID) {
       this.getPatientStudies(patientID);
@@ -59,10 +78,17 @@ export default {
     getInstances(seriesID) {
       this.getPatientInstances(seriesID);
     },
+    getFramesForInstance(instanceID) {
+      this.getFrames(instanceID);
+      this.selectedInstanceId = instanceID;
+      this.selectedFrame = 0;
+    },
     showImage(instanceID) {
       var that = this;
       // todo pin to api service with headers authorization
-      fetch(`/orthanc/instances/${instanceID}/preview`)
+      fetch(
+        `/orthanc/instances/${instanceID}/frames/${this.selectedFrame}/preview`
+      )
         .then(function(data) {
           return data.blob();
         })
@@ -76,7 +102,13 @@ export default {
     this.getPatients();
   },
   computed: {
-    ...mapGetters("hello", ["patients", "studies", "series", "instances"])
+    ...mapGetters("hello", [
+      "patients",
+      "studies",
+      "series",
+      "instances",
+      "frames"
+    ])
   }
 };
 </script>
