@@ -25,7 +25,7 @@ const service = {
         const resource = `instances/${instanceID}/preview`;
         const result = await client.get(resource);
         console.log(result);
-        
+
         return result.data;
     },
 };

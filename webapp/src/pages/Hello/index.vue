@@ -61,7 +61,8 @@ export default {
     },
     showImage(instanceID) {
       var that = this;
-      fetch(`http://localhost/orthanc/instances/${instanceID}/preview`)
+      // todo pin to api service with headers authorization
+      fetch(`/orthanc/instances/${instanceID}/preview`)
         .then(function(data) {
           return data.blob();
         })
@@ -75,12 +76,7 @@ export default {
     this.getPatients();
   },
   computed: {
-    ...mapGetters("hello", [
-      "patients",
-      "studies",
-      "series",
-      "instances"
-    ])
+    ...mapGetters("hello", ["patients", "studies", "series", "instances"])
   }
 };
 </script>
