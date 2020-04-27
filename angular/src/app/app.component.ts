@@ -12,10 +12,15 @@ export class AppComponent {
 
   constructor(private http: HttpClient) {
     this.getPatientsProxy().subscribe();
+    this.getPatientsDirectly().subscribe();
   }
 
   getPatientsProxy(): Observable<any> {
     return this.http.get('/orthanc/patients');
+  }
+
+  getPatientsDirectly(): Observable<any> {
+    return this.http.get('http://nginx:80/orthanc/patients');
   }
 
   getDogsProxy(): Observable<any> {
