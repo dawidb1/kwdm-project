@@ -28,6 +28,11 @@ const service = {
 
         return result.data;
     },
+    async getFrames(instanceID) {
+        const resource = `instances/${instanceID}/frames`;
+        const result = await client.get(resource);
+        return result.data;
+    },
 };
 
 export default service;
