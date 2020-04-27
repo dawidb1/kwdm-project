@@ -1,8 +1,8 @@
 module.exports = {
   devServer: {
     proxy: {
-      '^/api': {
-        target: 'https://dog.ceo/',
+      '^/orthanc': {
+        target: 'http://nginx:80',
         changeOrigin: true
       },
     },

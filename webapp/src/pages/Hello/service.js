@@ -2,7 +2,7 @@ import client from '@/api';
 
 const service = {
     async getPatients() {
-        const resource = '/breeds/image/random';
+        const resource = 'patients';
         const result = await client.get(resource);
         return result.data;
     },
