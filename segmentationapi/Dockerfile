@@ -1,13 +1,11 @@
-FROM ubuntu:latest
-RUN apt-get update -y
-RUN apt-get install -y python-pip python-dev build-essential
+FROM python:3
 
-WORKDIR /segmentation-api
-ADD ./requirements.txt /segmentation-api/requirements.txt
-RUN pip install -r requirements.txt
+WORKDIR /usr/src/app
 
-COPY . /segmentation-api
+COPY mock-requirements.txt ./
+RUN pip install --no-cache-dir -r mock-requirements.txt
+
+COPY . .
 
 EXPOSE 5000
-ENTRYPOINT ["python"]
-CMD ["run-keras-server.py"]
+CMD [ "python", "./mock-segmentation-api.py" ]
