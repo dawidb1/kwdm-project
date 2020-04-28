@@ -13,6 +13,9 @@ Celem projektu jest stworzenie aplikacji webowej, która umożliwi wsparcie dla 
 - webapi (.NET - logowanie/rejestracja)
 - segmentationapi (python - segmentacja)
 
+# Authentication:
+"demo": "demo"
+
 # Docker
 First use:
 `docker-compose up --build`
