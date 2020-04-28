@@ -1,10 +1,10 @@
-version: "2"
+version: "3"
 services:
   nginx:
     build: nginx
+    ports: ["80:80"]
     depends_on: [orthanc]
     restart: unless-stopped
-    ports: ["80:80"]
     volumes: ["nginx:/etc/nginx:Z"]
   orthanc:
     build: orthanc
