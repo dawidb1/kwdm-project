@@ -1,7 +1,9 @@
 import flask
 from flask import jsonify, Response
+from flask_cors import CORS
 
 app = flask.Flask(__name__)
+CORS(app)
 
 
 @app.route("/predict/<studyId>", methods=["GET"])
