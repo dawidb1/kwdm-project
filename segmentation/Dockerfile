@@ -1,6 +1,6 @@
 FROM python:3
 
-WORKDIR /usr/src/app
+WORKDIR /etc/segmentation
 
 COPY mock-requirements.txt ./
 RUN pip install --no-cache-dir -r mock-requirements.txt
