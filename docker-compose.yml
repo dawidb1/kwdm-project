@@ -16,10 +16,6 @@ services:
     ports:
       - "5000:5000"
     volumes: ["segmentation:/etc/segmentation:Z"]
-    environment:
-      PORT: 5000
-      CHOKIDAR_USEPOLLING: 1
-      CHOKIDAR_POLLINTERVAL: 3000
   webapp:
     build: ./webapp
     restart: always
