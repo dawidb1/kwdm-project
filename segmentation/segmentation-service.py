@@ -3,7 +3,7 @@
 
 # save on disc in folder as dicom OK
 # call my_predict from my_predict_data OK
-# send returned dicom to orthanc
+# send returned dicom to orthanc OK
 # return instanceID of dicom
 
 from orthanc_service import OrthancService
@@ -15,27 +15,37 @@ from Unet3DCNN.brats.my_predict_data import my_predict
 class SegmentationService:
 
     def __init__(self):
-        self.orthancService = OrthancService()
-        self.predictionImagesDir = os.path.abspath("to_predict_data")
+        self.__orthancService = OrthancService()
+        self.__predictionImagesDir = os.path.abspath("to_predict_data")
 
-    def createPrediction(self):
-        my_predict(self.predictionImagesDir, self.predictionImagesDir)
+    def makePrediction(self, studyId):
+        self.__getAllModalities(studyId)
+        url = self.__createPrediction()
+        status = self.__sendPrediction(url)
+        print(status)
+        return status['ID']
 
-    def getAllModalities(self, studyId):
+    def __sendPrediction(self, image_url):
+        return self.__orthancService.postImage(image_url).json()
+
+    def __createPrediction(self):
+        return my_predict(self.__predictionImagesDir, self.__predictionImagesDir)
+
+    def __getAllModalities(self, studyId):
         modalities = ["t1", "t1ce", "flair", "t2"]
         for modality in modalities:
-            response = self.getModalityInstance(studyId, modality)
+            response = self.__getModalityInstance(studyId, modality)
             if response.status_code == 200:
-                self.saveImage(response.content, modality)
+                self.__saveImage(response.content, modality)
 
-    def getModalityInstance(self, studyId, modality):
-        instanceId = self.orthancService.getInstanceIdByStudyIdAndModality(
+    def __getModalityInstance(self, studyId, modality):
+        instanceId = self.__orthancService.getInstanceIdByStudyIdAndModality(
             studyId, modality).json()[0]
         print(instanceId)
-        return self.orthancService.getInstanceById(instanceId)
+        return self.__orthancService.getInstanceById(instanceId)
 
-    def saveImage(self, content, filename, format=".dcm"):
-        path = os.path.join(self.predictionImagesDir, filename + format)
+    def __saveImage(self, content, filename, format=".dcm"):
+        path = os.path.join(self.__predictionImagesDir, filename + format)
         with open(path, 'wb') as f:
             f.write(content)
 
@@ -44,5 +54,5 @@ if __name__ == "__main__":
     print(("* SegmentationService execute *"))
     segmentationService = SegmentationService()
     studyId = "751f0eaf-29aa-4e9c-bff5-da20e9205737"
-    segmentationService.getAllModalities(studyId)
-    segmentationService.createPrediction()
+    predictionId = segmentationService.makePrediction(studyId)
+    print(predictionId)

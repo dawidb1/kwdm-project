@@ -31,9 +31,12 @@ class OrthancService:
 
         return self.apiService.post(FIND, body.toJson())
 
-    def postImage(self, image):
+    def postImage(self, imageUrl):
+        data = open(imageUrl, 'rb').read()
+        # r = requests.post(your_url, data=data)
+
         headers = {'Content-Type': 'application/dicom'}
-        return self.apiService.post(INSTANCE_URL, image, headers)
+        return self.apiService.post(INSTANCE_URL, data=data, headers=headers)
 
     def tests(self):
         print("ORTHANC API ALL REQUESTS TEST")
