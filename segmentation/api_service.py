@@ -10,5 +10,5 @@ class ApiService:
     def get(self, url):
         return requests.get(url, auth=self.auth)
 
-    def post(self, url, data, headers):
+    def post(self, url, data, headers=None):
         return requests.post(url, data, headers=headers, auth=self.auth)
