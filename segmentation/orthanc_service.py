@@ -1,6 +1,9 @@
 from api_service import ApiService
 from flask import jsonify
 import json
+from find_tool import FindToolBuilder
+from find_tool import QueryToolBuilder
+
 
 ORTHANC_URL = "http://localhost/orthanc"
 PATIENTS_URL = ORTHANC_URL + "/patients"
@@ -12,7 +15,6 @@ class OrthancService:
 
     def __init__(self):
         self.apiService = ApiService('demo', 'demo')
-        self.tests()
 
     def getPatientList(self):
         return self.apiService.get(PATIENTS_URL)
@@ -22,15 +24,12 @@ class OrthancService:
         return self.apiService.get(path)
 
     def getInstanceIdByStudyIdAndModality(self, studyId, modality):
-        body = json.dumps({
-            'Level': 'Instance',
-            'Query': {
-                'StudyID': studyId,
-                'Modality': modality
-            },
-        })
+        query = QueryToolBuilder().setStudyId(
+            studyId).setModality(modality).build()
 
-        return self.apiService.post(FIND, body)
+        body = FindToolBuilder().setLevel("Instance").setQuery(query.toJsonable()).build()
+
+        return self.apiService.post(FIND, body.toJson())
 
     def postImage(self, image):
         headers = {'Content-Type': 'application/dicom'}
@@ -46,7 +45,8 @@ class OrthancService:
         postImageResponse = self.postImage(image)
         print(postImageResponse)
         studyId = "751f0eaf-29aa-4e9c-bff5-da20e9205737"
-        dicomFlair = self.getInstanceIdByStudyIdAndModality(studyId, "FLAIR")
+        dicomFlair = self.getInstanceIdByStudyIdAndModality(
+            studyId, "FLAIR")
         print(dicomFlair)
 
 

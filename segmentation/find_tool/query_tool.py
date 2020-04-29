@@ -7,11 +7,11 @@ class QueryTool:
         self.studyId = studyId
         self.modality = modality
 
-    def toJson(self):
-        return json.dumps({
+    def toJsonable(self):
+        return {
             'StudyID': self.studyId,
             'Modality': self.modality
-        })
+        }
 
 
 class QueryToolBuilder:
@@ -34,4 +34,4 @@ class QueryToolBuilder:
 
 if __name__ == "__main__":
     query = QueryToolBuilder().setStudyId("Instance").setModality("FLAIR").build()
-    print(query.toJson())
+    print(query.toJsonable())

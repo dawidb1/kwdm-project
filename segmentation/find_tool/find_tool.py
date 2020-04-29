@@ -1,4 +1,5 @@
 import json
+from .query_tool import QueryToolBuilder
 
 
 class FindTool:
@@ -33,9 +34,7 @@ class FindToolBuilder:
 
 
 if __name__ == "__main__":
-    query = {
-        'StudyID': 'StudyID',
-        'Modality': 'modality'
-    }
-    find = FindToolBuilder().setLevel("Instance").setQuery(query).build()
+    query = QueryToolBuilder().setModality("FLAIR").setStudyId(
+        "751f0eaf-29aa-4e9c-bff5-da20e9205737").build()
+    find = FindToolBuilder().setLevel("Instance").setQuery(query.toJsonable()).build()
     print(find.toJson())
