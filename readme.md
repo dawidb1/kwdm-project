@@ -16,6 +16,10 @@ Celem projektu jest stworzenie aplikacji webowej, która umożliwi wsparcie dla 
 # Authentication:
 "demo": "demo"
 
+# Model 
+
+Copy your keras model to the `segmentation` folder and call it `model.h5`
+
 # Docker
 First use:
 `docker-compose up --build`

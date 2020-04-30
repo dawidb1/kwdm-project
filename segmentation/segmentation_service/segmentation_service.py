@@ -18,7 +18,7 @@ class SegmentationService:
         self.__orthancService = orthancService
         self.__predictionImagesDir = os.path.abspath("to_predict_data")
         self.__modelFile = os.path.abspath(
-            "segmentation_service/isensee_2019_new.h5")
+            "model.h5")
 
     def makePrediction(self, studyId):
         self.__getAllModalities(studyId)
