@@ -18,7 +18,11 @@
     </p>
     <p>
       Serie:
-      <v-btn v-for="item in series.Series" :key="item" @click="getInstances(item)">Seria: {{item}}</v-btn>
+      <v-btn
+        v-for="item in series.Series"
+        :key="item"
+        @click="getInstances(item); predict(item)"
+      >Seria: {{item}}</v-btn>
     </p>
     <p>
       Obrazy:
@@ -96,6 +100,12 @@ export default {
           var dd = URL.createObjectURL(img);
           that.imageData = dd;
         });
+    },
+    predict(studyID) {
+      // todo pin to api service with headers authorization
+      fetch(`/predict/${studyID}`).then(function(data) {
+        return data;
+      });
     }
   },
   created() {

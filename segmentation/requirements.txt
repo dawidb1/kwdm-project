@@ -1,0 +1,13 @@
+numpy
+tensorflow
+keras
+flask
+flask_cors
+pillow
+h5py
+simpleitk
+nilearn
+nipype
+nibabel
+tables
+pydicom

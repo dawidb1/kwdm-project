@@ -16,6 +16,10 @@ Celem projektu jest stworzenie aplikacji webowej, która umożliwi wsparcie dla 
 # Authentication:
 "demo": "demo"
 
+# Model 
+
+Copy your keras model to the `segmentation` folder and call it `model.h5`
+
 # Docker
 First use:
 `docker-compose up --build`
@@ -29,3 +33,7 @@ Next use:
 ## only webapp
 `docker build -t webapp:latest .`
 `docker run -p 8080:8080 webapp`
+
+# Resources
+### Orthanc documentation
+https://api.orthanc-server.com/
