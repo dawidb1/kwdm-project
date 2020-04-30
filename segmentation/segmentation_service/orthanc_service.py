@@ -5,22 +5,21 @@ from .find_tool import FindToolBuilder
 from .find_tool import QueryToolBuilder
 
 
-ORTHANC_URL = "http://localhost/orthanc"
-PATIENTS_URL = ORTHANC_URL + "/patients"
-INSTANCE_URL = ORTHANC_URL + "/instances"
-FIND = ORTHANC_URL + "/tools/find"
-
-
 class OrthancService:
 
-    def __init__(self):
+    def __init__(self, url):
         self.apiService = ApiService('demo', 'demo')
 
+        self.OrthancUrl = url
+        self.PATIENTS_URL = self.OrthancUrl + "/patients"
+        self.INSTANCE_URL = self.OrthancUrl + "/instances"
+        self.FIND = self.OrthancUrl + "/tools/find"
+
     def getPatientList(self):
-        return self.apiService.get(PATIENTS_URL)
+        return self.apiService.get(self.PATIENTS_URL)
 
     def getInstanceById(self, instanceId):
-        path = INSTANCE_URL + "/" + instanceId + "/file"
+        path = self.INSTANCE_URL + "/" + instanceId + "/file"
         return self.apiService.get(path)
 
     def getInstanceIdByStudyIdAndModality(self, studyId, modality):
@@ -29,14 +28,14 @@ class OrthancService:
 
         body = FindToolBuilder().setLevel("Instance").setQuery(query.toJsonable()).build()
 
-        return self.apiService.post(FIND, body.toJson())
+        return self.apiService.post(self.FIND, body.toJson())
 
     def postImage(self, imageUrl):
         data = open(imageUrl, 'rb').read()
         # r = requests.post(your_url, data=data)
 
         headers = {'Content-Type': 'application/dicom'}
-        return self.apiService.post(INSTANCE_URL, data=data, headers=headers)
+        return self.apiService.post(self.INSTANCE_URL, data=data, headers=headers)
 
     def tests(self):
         print("ORTHANC API ALL REQUESTS TEST")
@@ -55,4 +54,4 @@ class OrthancService:
 
 if __name__ == "__main__":
     print(("* OrthancService execute *"))
-    orthancService = OrthancService()
+    orthancService = OrthancService("localhost/orthanc")

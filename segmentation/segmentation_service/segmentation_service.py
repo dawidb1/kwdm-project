@@ -14,9 +14,11 @@ from Unet3DCNN.brats.my_predict_data import my_predict
 
 class SegmentationService:
 
-    def __init__(self):
-        self.__orthancService = OrthancService()
+    def __init__(self, orthancService):
+        self.__orthancService = orthancService
         self.__predictionImagesDir = os.path.abspath("to_predict_data")
+        self.__modelFile = os.path.abspath(
+            "segmentation_service/isensee_2019_new.h5")
 
     def makePrediction(self, studyId):
         self.__getAllModalities(studyId)
@@ -29,7 +31,7 @@ class SegmentationService:
         return self.__orthancService.postImage(image_url).json()
 
     def __createPrediction(self):
-        return my_predict(self.__predictionImagesDir, self.__predictionImagesDir)
+        return my_predict(self.__predictionImagesDir, self.__predictionImagesDir, self.__modelFile)
 
     def __getAllModalities(self, studyId):
         modalities = ["t1", "t1ce", "flair", "t2"]
