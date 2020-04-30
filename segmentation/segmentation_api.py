@@ -1,7 +1,7 @@
 import flask
 from flask import jsonify, Response
 from flask_cors import CORS
-from .segmentation_service import SegmentationService
+from segmentation_service import SegmentationService
 
 app = flask.Flask(__name__)
 CORS(app)

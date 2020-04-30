@@ -12,27 +12,29 @@ services:
     volumes: ["orthanc:/etc/orthanc:Z"]
   segmentation:
     build: segmentation
+    command: [ "python", "./segmentation_api.py" ]
     restart: unless-stopped
     ports:
       - "5000:5000"
-    volumes: ["segmentation:/etc/segmentation:Z"]
-  webapp:
-    build: ./webapp
-    restart: always
-    depends_on:
-      - orthanc
-      - nginx
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./webapp/src:/usr/webapp/src
-      - ./webapp/public:/usr/webapp/public
-    environment:
-      PORT: 8080
-      CHOKIDAR_USEPOLLING: 1
-      CHOKIDAR_POLLINTERVAL: 3000
+    depends_on: [orthanc, nginx]
+    volumes: ["./segmentation:/etc/segmentation:Z"]
+  # webapp:
+  #   build: ./webapp
+  #   restart: always
+  #   depends_on:
+  #     - orthanc
+  #     - nginx
+  #   ports:
+  #     - "8080:8080"
+  #   volumes:
+  #     - ./webapp/src:/usr/webapp/src
+  #     - ./webapp/public:/usr/webapp/public
+  #   environment:
+  #     PORT: 8080
+  #     CHOKIDAR_USEPOLLING: 1
+  #     CHOKIDAR_POLLINTERVAL: 3000
 volumes:
   orthanc:
   nginx:
   segmentation:
-  webapp:
+  # webapp:

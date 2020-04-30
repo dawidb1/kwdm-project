@@ -6,7 +6,7 @@
 # send returned dicom to orthanc OK
 # return instanceID of dicom
 
-from orthanc_service import OrthancService
+from .orthanc_service import OrthancService
 import SimpleITK as sitk
 import os
 from Unet3DCNN.brats.my_predict_data import my_predict

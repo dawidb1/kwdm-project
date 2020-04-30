@@ -1,6 +1,6 @@
 numpy
 tensorflow
-keras 
+keras
 flask
 flask_cors
 pillow
@@ -8,5 +8,6 @@ h5py
 simpleitk
 nilearn
 nipype
-os
-json
+nibabel
+tables
+pydicom

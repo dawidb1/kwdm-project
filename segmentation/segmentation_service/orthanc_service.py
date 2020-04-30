@@ -1,8 +1,8 @@
-from api_service import ApiService
+from .api_service import ApiService
 from flask import jsonify
 import json
-from find_tool import FindToolBuilder
-from find_tool import QueryToolBuilder
+from .find_tool import FindToolBuilder
+from .find_tool import QueryToolBuilder
 
 
 ORTHANC_URL = "http://localhost/orthanc"
