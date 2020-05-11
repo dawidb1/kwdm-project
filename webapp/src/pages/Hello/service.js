@@ -33,6 +33,16 @@ const service = {
         const result = await client.get(resource);
         return result.data;
     },
+    async getInstanceTags(instanceID) {
+        const resource = `instances/${instanceID}/simplified-tags`;
+        const result = await client.get(resource);
+        return result.data;
+    },
+    async segmentize(studyID) {
+        const resource = `predict/${studyID}`;
+        const result = await client.getSegmentation(resource);
+        return result.data;
+    },
 };
 
 export default service;

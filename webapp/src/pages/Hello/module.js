@@ -5,7 +5,9 @@ const state = {
     series: [],
     studies: [],
     instances: [],
-    frames: []
+    frames: [],
+    instanceTags: [],
+    segmentizedId: [],
 };
 
 const getters = {
@@ -13,7 +15,9 @@ const getters = {
     series: state => state.series,
     studies: state => state.studies,
     instances: state => state.instances,
-    frames: state => state.frames
+    frames: state => state.frames,
+    instanceTags: state => state.instanceTags,
+    segmentizedId: state => state.segmentizedId
 };
 
 const actions = {
@@ -37,6 +41,14 @@ const actions = {
         const result = await helloService.getFrames(instanceID);
         commit('setFrames', result);
     },
+    async getInstanceTags({ commit }, instanceID) {
+        const result = await helloService.getInstanceTags(instanceID);
+        commit('setInstanceTags', result);
+    },
+    async segmentize({ commit }, studyID) {
+        const result = await helloService.segmentize(studyID);
+        commit('setSegmentizedID', result.instanceId);
+    },
 };
 
 const mutations = {
@@ -57,6 +69,12 @@ const mutations = {
     },
     setFrames(state, result) {
         state.frames = result;
+    },
+    setInstanceTags(state, result) {
+        state.instanceTags = result;
+    },
+    setSegmentizedID(state, result) {
+        state.segmentizedId = result;
     },
 };
 
