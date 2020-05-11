@@ -53,9 +53,9 @@
     </p>
 
      <img :src="imageData2" />
-    <label v-if="selectedFrame2 !== null">Wybrany przekrój: {{selectedFrame2}}</label>
+    <label v-if="segmentizedId !== null">Wybrany przekrój: {{selectedFrame2}}</label>
     <v-slider
-      v-if="selectedFrame2 !== null"
+      v-if="segmentizedId !== null"
       v-model="selectedFrame2"
       class="align-center"
       :max="frames.length-1"
@@ -83,11 +83,13 @@ export default {
     selectedFrame() {
       if (this.selectedInstanceId !== null) {
         this.showImage(this.selectedInstanceId);
+        this.selectedFrame2 = this.selectedFrame;
       }
     },
     selectedFrame2() {
       if (this.segmentizedId !== null) {
         this.showSegmentedImage();
+        this.selectedFrame = this.selectedFrame2;
       }
     }
   },

@@ -7,7 +7,7 @@ const state = {
     instances: [],
     frames: [],
     instanceTags: [],
-    segmentizedId: [],
+    segmentizedId: null,
 };
 
 const getters = {
