@@ -7,8 +7,8 @@ from .find_tool import QueryToolBuilder
 
 class OrthancService:
 
-    def __init__(self, url):
-        self.apiService = ApiService('demo', 'demo')
+    def __init__(self, url, apiService):
+        self.apiService = apiService
 
         self.OrthancUrl = url
         self.PATIENTS_URL = self.OrthancUrl + "/patients"
@@ -54,4 +54,5 @@ class OrthancService:
 
 if __name__ == "__main__":
     print(("* OrthancService execute *"))
-    orthancService = OrthancService("localhost/orthanc")
+    apiService = ApiService('demo', 'demo')
+    orthancService = OrthancService("localhost/orthanc", apiService)
