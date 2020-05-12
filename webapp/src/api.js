@@ -8,6 +8,14 @@ const api = axios.create({
   },
 });
 
+const segmentationApi = axios.create({
+  baseURL: "",
+  auth: {
+    username: "demo",
+    password: "demo",
+  },
+});
+
 const client = {
   async get(resource, params) {
     const config = {
@@ -28,6 +36,14 @@ const client = {
       params,
     };
     const result = await api.delete(resource, config);
+    return result;
+  },
+
+  async getSegmentation(resource, params) {
+    const config = {
+      params,
+    };
+    const result = await segmentationApi.get(resource, config);
     return result;
   },
 };

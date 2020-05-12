@@ -21,7 +21,7 @@
       <v-btn
         v-for="item in series.Series"
         :key="item"
-        @click="getInstances(item); predict(item)"
+        @click="getInstances(item);"
       >Seria: {{item}}</v-btn>
     </p>
     <p>
@@ -42,6 +42,26 @@
       :min="0"
       hide-details
     ></v-slider>
+
+      <p>
+      Segmentacja:
+      <v-btn
+        v-for="item in instances.Instances"
+        :key="item"
+        @click="predict(item)"
+      >Segmentacja: {{item}}</v-btn>
+    </p>
+
+     <img :src="imageData2" />
+    <label v-if="segmentizedId !== null">Wybrany przekrój: {{selectedFrame2}}</label>
+    <v-slider
+      v-if="segmentizedId !== null"
+      v-model="selectedFrame2"
+      class="align-center"
+      :max="frames.length-1"
+      :min="0"
+      hide-details
+    ></v-slider>
   </div>
 </template>
 
@@ -52,8 +72,10 @@ export default {
   name: "HelloWorld",
   data() {
     return {
-      imageData: "",
+      imageData: null,
+      imageData2: null,
       selectedFrame: null,
+      selectedFrame2: null,
       selectedInstanceId: null
     };
   },
@@ -61,6 +83,13 @@ export default {
     selectedFrame() {
       if (this.selectedInstanceId !== null) {
         this.showImage(this.selectedInstanceId);
+        this.selectedFrame2 = this.selectedFrame;
+      }
+    },
+    selectedFrame2() {
+      if (this.segmentizedId !== null) {
+        this.showSegmentedImage();
+        this.selectedFrame = this.selectedFrame2;
       }
     }
   },
@@ -71,7 +100,9 @@ export default {
       "getPatientStudies",
       "getPatientSeries",
       "getPatientInstances",
-      "getFrames"
+      "getFrames",
+      "getInstanceTags",
+      "segmentize"
     ]),
     getStudies(patientID) {
       this.getPatientStudies(patientID);
@@ -88,7 +119,6 @@ export default {
       this.selectedFrame = 0;
     },
     showImage(instanceID) {
-      var that = this;
       // todo pin to api service with headers authorization
       fetch(
         `/orthanc/instances/${instanceID}/frames/${this.selectedFrame}/preview`
@@ -98,14 +128,28 @@ export default {
         })
         .then(function(img) {
           var dd = URL.createObjectURL(img);
-          that.imageData = dd;
-        });
+          this.imageData = dd;
+        }.bind(this));
     },
-    predict(studyID) {
+     showSegmentedImage() {
       // todo pin to api service with headers authorization
-      fetch(`/predict/${studyID}`).then(function(data) {
-        return data;
-      });
+      fetch(
+        `/orthanc/instances/${this.segmentizedId}/frames/${this.selectedFrame2}/preview`
+      )
+        .then(function(data) {
+          return data.blob();
+        })
+        .then(function(img) {
+          var dd = URL.createObjectURL(img);
+          this.imageData2 = dd;
+        }.bind(this));
+    },
+    async predict(instanceID) {
+      
+      await this.getInstanceTags(instanceID);
+      await this.segmentize(this.instanceTags.StudyID);
+      this.selectedFrame2 = 0;
+      this.showSegmentedImage();
     }
   },
   created() {
@@ -117,7 +161,9 @@ export default {
       "studies",
       "series",
       "instances",
-      "frames"
+      "frames",
+      "instanceTags",
+      "segmentizedId"
     ])
   }
 };
