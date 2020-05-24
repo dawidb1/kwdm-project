@@ -1,4 +1,4 @@
-import helloService from './service';
+import dashboardService from './service';
 
 const state = {
     patients: [],
@@ -22,31 +22,31 @@ const getters = {
 
 const actions = {
     async getPatients({ commit }) {
-        const result = await helloService.getPatients();
+        const result = await dashboardService.getPatients();
         commit('setPatients', result);
     },
     async getPatientStudies({ commit }, patientID) {
-        const result = await helloService.getPatientStudies(patientID);
+        const result = await dashboardService.getPatientStudies(patientID);
         commit('setPatientStudies', result);
     },
     async getPatientSeries({ commit }, studyID) {
-        const result = await helloService.getPatientSeries(studyID);
+        const result = await dashboardService.getPatientSeries(studyID);
         commit('setPatientSeries', result);
     },
     async getPatientInstances({ commit }, seriesID) {
-        const result = await helloService.getPatientInstances(seriesID);
+        const result = await dashboardService.getPatientInstances(seriesID);
         commit('setInstances', result);
     },
     async getFrames({ commit }, instanceID) {
-        const result = await helloService.getFrames(instanceID);
+        const result = await dashboardService.getFrames(instanceID);
         commit('setFrames', result);
     },
     async getInstanceTags({ commit }, instanceID) {
-        const result = await helloService.getInstanceTags(instanceID);
+        const result = await dashboardService.getInstanceTags(instanceID);
         commit('setInstanceTags', result);
     },
     async segmentize({ commit }, studyID) {
-        const result = await helloService.segmentize(studyID);
+        const result = await dashboardService.segmentize(studyID);
         commit('setSegmentizedID', result.instanceId);
     },
 };
@@ -63,6 +63,8 @@ const mutations = {
     },
     setPatientSeries(state, result) {
         state.series = result;
+        state.instances = [];
+        state.image = {};
     },
     setInstances(state, result) {
         state.instances = result;
