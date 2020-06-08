@@ -1,8 +1,9 @@
 <template>
+<div style="background: #F3F5CB; height: 100%;">
   <div class="d-flex" style="padding: 40px;">
     <div class="left-container">
       <div class="action-button-container">
-        <p>Pacjenci:</p>
+        <p><b>Pacjenci:</b></p>
         <v-btn
           class="action-button"
           outlined
@@ -11,39 +12,41 @@
           :key="patient.ID"
           @click="getStudies(patient.ID)"
         >{{patient.patientName}}</v-btn>
-        <p>Badania:</p>
+        <p><b>Badania:</b></p>
         <v-btn
           class="action-button"
           outlined
           rounded
-          v-for="study in studies.Studies"
+          v-for="(study, index) in studies.Studies"
           :key="study"
           @click="getSeries(study)"
-        >{{study}}</v-btn>
-        <p>Serie:</p>
+        >Badanie {{index + 1}}</v-btn>
+        <p><b>Serie:</b></p>
 
         <v-btn
           class="action-button"
           outlined
           rounded
-          v-for="item in series.Series"
+          v-for="(item, index) in series.Series"
           :key="item"
           @click="getInstances(item);"
-        >{{item}}</v-btn>
-        <p>Obrazy:</p>
+        >Seria {{index + 1}}</v-btn>
+        <p><b>Obrazy:</b></p>
         <v-btn
           class="action-button"
           outlined
           rounded
-          v-for="item in instances.Instances"
+          v-for="(item, index) in instances.Instances"
           :key="item"
           @click="getFramesForInstance(item)"
-        >{{item}}</v-btn>
+        >Obraz {{index + 1}}</v-btn>
       </div>
     </div>
     <div class="right-container">
       <div class="image-container" v-if="selectedFrame !== null">
+        <div class="center-img">
         <img class="image" :src="imageData" />
+        </div>
         <label>Wybrany przekrój: {{selectedFrame}}</label>
         <v-slider
           v-model="selectedFrame"
@@ -64,7 +67,9 @@
       <div class="image-container" v-if="selectedFrame2 !== null">
         <v-tooltip right>
           <template v-slot:activator="{ on }">
-            <img class="image" v-on="on" :src="imageData2" />
+            <div class="center-img">
+            <img class="image-segmentation" v-on="on" :src="imageData2" />
+            </div>
           </template>
           <span>Wysegmentowany obraz</span>
         </v-tooltip>
@@ -81,6 +86,7 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -221,9 +227,19 @@ a {
 .image {
   width: 350px;
   height: 350px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
-
+.image-segmentation {
+  width: 350px;
+  height: 350px;
+  margin-bottom: 20px;
+  transform: rotate(180deg)
+}
+.center-img {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .image-container {
   display: flex;
   flex-direction: column;
