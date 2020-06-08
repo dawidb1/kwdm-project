@@ -1,90 +1,113 @@
 <template>
-  <div class="d-flex" style="padding: 40px;">
-    <div class="left-container">
-      <div class="action-button-container">
-        <p>Pacjenci:</p>
-        <v-btn
-          class="action-button"
-          outlined
-          rounded
-          v-for="patient in patients"
-          :key="patient.ID"
-          @click="getStudies(patient.ID)"
-        >{{patient.patientName}}</v-btn>
-        <p>Badania:</p>
-        <v-btn
-          class="action-button"
-          outlined
-          rounded
-          v-for="study in studies.Studies"
-          :key="study"
-          @click="getSeries(study)"
-        >{{study}}</v-btn>
-        <p>Serie:</p>
+  <div style="background: #d6f5d6; height: 100%;">
+    <div class="header">Internetowa stacja wspomagania segmentacji obrazów medycznych</div>
+    <div class="d-flex" style="padding: 40px;">
+      <div class="left-container">
+        <div class="action-button-container">
+          <p>
+            <b>Pacjenci:</b>
+          </p>
+          <v-btn
+            class="action-button"
+            outlined
+            rounded
+            v-for="patient in patients"
+            :key="patient.ID"
+            @click="getStudies(patient.ID)"
+          >{{patient.patientName}}</v-btn>
+          <div v-if="studiesClicked" class="action-button-container">
+            <p>
+              <b>Badania:</b>
+            </p>
+            <v-btn
+              class="action-button"
+              outlined
+              rounded
+              v-for="(study, index) in studies.Studies"
+              :key="study"
+              @click="getSeries(study)"
+            >Badanie {{index + 1}}</v-btn>
+          </div>
+          <div v-if="seriesClicked" class="action-button-container">
+            <p>
+              <b>Serie:</b>
+            </p>
 
-        <v-btn
-          class="action-button"
-          outlined
-          rounded
-          v-for="item in series.Series"
-          :key="item"
-          @click="getInstances(item);"
-        >{{item}}</v-btn>
-        <p>Obrazy:</p>
-        <v-btn
-          class="action-button"
-          outlined
-          rounded
-          v-for="item in instances.Instances"
-          :key="item"
-          @click="getFramesForInstance(item)"
-        >{{item}}</v-btn>
+            <v-btn
+              class="action-button"
+              outlined
+              rounded
+              v-for="(item, index) in series.Series"
+              :key="item"
+              @click="getInstances(item);"
+            >Seria {{index + 1}}</v-btn>
+          </div>
+          <div v-if="instancesClicked" class="action-button-container">
+            <p>
+              <b>Obrazy:</b>
+            </p>
+            <v-btn
+              class="action-button"
+              outlined
+              rounded
+              v-for="(item, index) in instances.Instances"
+              :key="item"
+              @click="getFramesForInstance(item)"
+            >Obraz {{index + 1}}</v-btn>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="right-container">
-      <div class="image-container" v-if="selectedFrame !== null">
-        <img class="image" :src="imageData" />
-        <label>Wybrany przekrój: {{selectedFrame}}</label>
-        <v-slider
-          v-model="selectedFrame"
-          class="align-center"
-          :max="frames.length-1"
-          :min="0"
-          hide-details
-        ></v-slider>
+      <div class="right-container" v-if="showImageClicked">
+        <div class="image-container" v-if="selectedFrame !== null">
+          <div class="center-img">
+            <img class="image" :src="imageData" />
+          </div>
+          <label>Wybrany przekrój: {{selectedFrame}}</label>
+          <v-slider
+            v-model="selectedFrame"
+            class="align-center"
+            :max="frames.length-1"
+            :min="0"
+            hide-details
+          ></v-slider>
+            <v-btn
+              outlined
+              rounded
+              style="background: #F9F9F9;"
+              v-for="item in instances.Instances"
+              :key="item"
+              @click="predict(item)"
+              :disabled="!segmentButtonActive"
+            >Segmentuj obraz</v-btn>
 
-        <v-btn
-          outlined
-          rounded
-          v-for="item in instances.Instances"
-          :key="item"
-          @click="predict(item)"
-        >Segmentuj wybrany obraz</v-btn>
-      </div>
-      <div class="image-container" v-if="selectedFrame2 !== null">
-        <v-tooltip right>
-          <template v-slot:activator="{ on }">
-            <img class="image" v-on="on" :src="imageData2" />
-          </template>
-          <span>Wysegmentowany obraz</span>
-        </v-tooltip>
+        </div>
+        <div class="image-container" v-if="selectedFrame2 !== null && !segmentButtonActive && !isPrediction" >
+          <v-tooltip right>
+            <template v-slot:activator="{ on }">
+              <div class="center-img">
+                <img class="image-segmentation" v-on="on" :src="imageData2" />
+              </div>
+            </template>
+            <span>Wysegmentowany obraz</span>
+          </v-tooltip>
 
-        <label v-if="segmentizedId !== null">Wybrany przekrój: {{selectedFrame2}}</label>
-        <v-slider
-          v-if="segmentizedId !== null"
-          v-model="selectedFrame2"
-          class="align-center"
-          :max="frames.length-1"
-          :min="0"
-          hide-details
-        ></v-slider>
+          <label v-if="segmentizedId !== null">Wybrany przekrój: {{selectedFrame2}}</label>
+          <v-slider
+            v-if="segmentizedId !== null"
+            v-model="selectedFrame2"
+            class="align-center"
+            :max="frames.length-1"
+            :min="0"
+            hide-details
+          ></v-slider>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "Dashboard",
@@ -94,7 +117,14 @@ export default {
       imageData2: null,
       selectedFrame: null,
       selectedFrame2: null,
-      selectedInstanceId: null
+      selectedInstanceId: null,
+      studiesClicked: false,
+      seriesClicked: false,
+      instancesClicked: false,
+      segmentDisable: false,
+      segmentButtonActive: true,
+      showImageClicked: false,
+      isPrediction: true,
     };
   },
   watch: {
@@ -120,25 +150,58 @@ export default {
       "getPatientInstances",
       "getFrames",
       "getInstanceTags",
-      "segmentize"
+      "segmentize",
+      "checkIfSegmentized"
     ]),
+    ...mapMutations("dashboard", ["setSegmentizedID"]),
     getStudies(patientID) {
       this.getPatientStudies(patientID);
+      this.segmentButtonActive = true;
+      this.studiesClicked = true;
+      this.seriesClicked = false;
+      this.instancesClicked = false;
+      this.showImageClicked = false;
+      this.isPrediction = false;
+
     },
     getSeries(studyID) {
       this.getPatientSeries(studyID);
+      this.seriesClicked = true;
+      this.showImageClicked = false;
+      this.instancesClicked = false;
+      this.isPrediction = false;
+
+
     },
     getInstances(seriesID) {
       this.getPatientInstances(seriesID);
+      this.instancesClicked = true;
+      this.showImageClicked = false;
     },
-    getFramesForInstance(instanceID) {
+    async getFramesForInstance(instanceID) {
       this.getFrames(instanceID);
       this.selectedInstanceId = instanceID;
-      this.selectedFrame = 0;
+      await this.getInstanceTags(instanceID);
+      if (this.instanceTags.Modality === "PRED") {
+        this.isPrediction = true;
+      }
+      await this.checkIfSegmentized(this.instanceTags.StudyID);
+
+    
+     if (this.alreadySegmented.length > 0) {
+        this.segmentButtonActive = false;
+        await this.setSegmentizedID(this.alreadySegmented[0]);
+        this.selectedFrame2 = 1;
+        this.showSegmentedImage();
+      } else {
+        this.segmentButtonActive = true;
+      }
+      this.selectedFrame = 1;
+      this.showImageClicked = true;
     },
     showImage(instanceID) {
       // todo pin to api service with headers authorization
-      this.selectedFrame === null ? 0 : this.selectedFrame
+      this.selectedFrame === null ? 0 : this.selectedFrame;
       fetch(
         `/orthanc/instances/${instanceID}/frames/${this.selectedFrame}/preview`
       )
@@ -151,6 +214,7 @@ export default {
             this.imageData = dd;
           }.bind(this)
         );
+      this.segmentDisable = false;
     },
     showSegmentedImage() {
       // todo pin to api service with headers authorization
@@ -168,10 +232,12 @@ export default {
         );
     },
     async predict(instanceID) {
-      await this.getInstanceTags(instanceID);
+      await this.getInstanceTags(instanceID);  
       await this.segmentize(this.instanceTags.StudyID);
-      this.selectedFrame2 = 0;
+      
+      this.selectedFrame2 = 1;
       this.showSegmentedImage();
+      this.segmentButtonActive = false;
     }
   },
   created() {
@@ -185,8 +251,12 @@ export default {
       "instances",
       "frames",
       "instanceTags",
-      "segmentizedId"
-    ])
+      "segmentizedId",
+      "alreadySegmented"
+    ]),
+    segmentationDisable() {
+      return this.segmentDisable;
+    }
   }
 };
 </script>
@@ -221,9 +291,19 @@ a {
 .image {
   width: 350px;
   height: 350px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
-
+.image-segmentation {
+  width: 350px;
+  height: 350px;
+  margin-bottom: 20px;
+  transform: rotate(180deg);
+}
+.center-img {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .image-container {
   display: flex;
   flex-direction: column;
@@ -234,11 +314,20 @@ a {
 .action-button {
   margin: 5px;
   width: 500px;
+  background: #f9f9f9;
 }
 
 .action-button-container {
   display: flex;
   align-items: center;
   flex-direction: column;
+}
+.header {
+  height: 50px;
+  width: 100%;
+  background: #d6f5d6;
+  text-align: center;
+  padding-top: 10px;
+  border-bottom: 1px solid;
 }
 </style>

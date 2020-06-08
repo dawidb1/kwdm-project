@@ -8,6 +8,8 @@ const state = {
     frames: [],
     instanceTags: [],
     segmentizedId: null,
+    pendingRequests: 0,
+    alreadySegmented: [],
 };
 
 const getters = {
@@ -17,7 +19,10 @@ const getters = {
     instances: state => state.instances,
     frames: state => state.frames,
     instanceTags: state => state.instanceTags,
-    segmentizedId: state => state.segmentizedId
+    segmentizedId: state => state.segmentizedId,
+    alreadySegmented: state => state.alreadySegmented,
+    anyPendingRequests: state => state.pendingRequests > 0,
+
 };
 
 const actions = {
@@ -49,6 +54,10 @@ const actions = {
         const result = await dashboardService.segmentize(studyID);
         commit('setSegmentizedID', result.instanceId);
     },
+    async checkIfSegmentized({ commit }, data) {
+        const result = await dashboardService.checkIfSegmentized(data);
+        commit('setAlreadySegmented', result);
+    }
 };
 
 const mutations = {
@@ -78,6 +87,15 @@ const mutations = {
     setSegmentizedID(state, result) {
         state.segmentizedId = result;
     },
+    setPendingRequest(state) {
+        state.pendingRequests++;
+      },
+      setCompleteRequest(state) {
+        state.pendingRequests--;
+      },
+      setAlreadySegmented(state, data){
+          state.alreadySegmented = data;
+      },
 };
 
 const module = {

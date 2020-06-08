@@ -1,4 +1,5 @@
 import axios from "axios";
+import store from '@/store';
 
 const api = axios.create({
   baseURL: "/orthanc/",
@@ -15,6 +16,28 @@ const segmentationApi = axios.create({
     password: "demo",
   },
 });
+api.interceptors.request.use(
+  (config) => {
+    if (!config.url.includes('SaveUserSettings')) {
+      store.commit('dashboard/setPendingRequest');
+    }
+    return config;
+  },
+
+  error => Promise.reject(error)
+);
+api.interceptors.response.use(
+  (response) => {
+    if (!response.config.url.includes('SaveUserSettings')) {
+      store.commit('dashboard/setCompleteRequest');
+    }
+    return response;
+  },
+  (error) => {
+    store.commit('dashboard/setCompleteRequest');
+    return Promise.reject(error);
+  }
+);
 
 const client = {
   async get(resource, params) {
