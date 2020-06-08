@@ -56,6 +56,17 @@ const service = {
     const result = await client.getSegmentation(resource);
     return result.data;
   },
+  async checkIfSegmentized(data) {
+    const resource = 'tools/find';
+    const result = await client.post(resource, {
+      Level: "Instance",
+      Query: {
+      Modality: "PRED",
+      StudyID: data,
+      },
+    });
+    return result.data;
+  },
 };
 
 export default service;
